@@ -1,8 +1,7 @@
  module SpectralSimilarity
 
 """
-A Julia port of the Python spectral_similarity, ms_distance and math_distance code
-uploaded by the user. This single-file module contains:
+This is a Julia version of previously published Python code: Li Y. et al. Nat Methods. 2021 Dec;18(12):1524-1531, doi: 10.1038/s41592-021-01331-z,  for spectral similarity and distance calculations:
 
 - math_distance functions (many distance formulas)
 - ms_distance functions (MS-specific aggregated distances)
@@ -10,22 +9,8 @@ uploaded by the user. This single-file module contains:
 - spectral_similarity API: distance, all_distance, similarity, all_similarity, multiple_distance, multiple_similarity
 
 Notes / limitations:
-- The tools implementations are reasonable reimplementations (filtering, peak matching) but may
-  differ slightly from the original Python implementation. They are intended to be a functional
-  starting point for pure-Julia usage and experimentation.
-- Many distance formulas are ported nearly verbatim from the Python originals using elementwise
-  broadcasting and Julia base functions.
-
-Usage example (in Julia REPL):
-
-using .SpectralSimilarity
-
-query = Float32[69.071 7.917962; 86.066 1.021589; 86.0969 100.0]
-ref   = Float32[41.04 37.16; 69.07 66.83; 86.1 999.0]
-
-# compute all distances (with ms2_da tolerance)
-result = SpectralSimilarity.all_distance(query, ref; ms2_da=0.05)
-println(result)
+- The distance calculations in this code were implemented very closely from original Python implementations, 
+  with only minimal changes needed to make them work in Julia.
 
 """
 
@@ -70,12 +55,7 @@ Return an Mx3 Float32 array where columns are [mz_reference, intensity_a, intens
 It constructs a union of peak m/zs from both spectra and assigns intensities if a matching
 peak is within tolerance, otherwise 0.
 """
-# spec_a = [31.02 39.02 41.04 43.01 44.02
-#  0.403 0.052 1.0 0.047 0.116]'
 
-#  spec_b = [ 31.02 39.02 41.04 42.03 43.02 44.03
-#  0.053 0.189 0.057 0.02 1.0 0.258]'
-#  ms2_da = 0.01
 function match_peaks_in_spectra_old(spec_a::AbstractArray{T,2}, spec_b::AbstractArray{T,2}; ms2_ppm=nothing, ms2_da=nothing) where T <: Real
     # Convert to Float64 for calculations
  
